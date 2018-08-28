@@ -8,18 +8,16 @@ namespace AsyncTester
 {
     public class TestClient
     {
-        private readonly CacheClient<string> _cacheClient;
-
         public TestClient()
         {
-            _cacheClient = new CacheClient<string>();
+            
         }
 
         public async Task<List<Product>> GetProducts()
         {
             Console.WriteLine("Requesting products");
 
-            return await _cacheClient.GetItem("PRODUCTS", () =>
+            return await CacheClient.GetItem("PRODUCTS", () =>
             {
                 var list = new List<Product>();
                 for (int i = 0; i < 50; i++)
@@ -39,7 +37,7 @@ namespace AsyncTester
 
 public async Task<List<Product>> GetProducts2()
 {
-    return await _cacheClient.GetItem("PRODUCTS", GetProductsBuildCache);
+    return await CacheClient.GetItem("PRODUCTS", GetProductsBuildCache);
 }
 
 public async Task<List<Product>> GetProductsBuildCache()
