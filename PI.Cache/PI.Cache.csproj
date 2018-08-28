@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net45;net46;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>PI Applications A/S</Authors>
+    <Company>PI Applications A/S</Company>
+  </PropertyGroup>
+
+</Project>

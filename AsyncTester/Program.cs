@@ -18,17 +18,23 @@ namespace AsyncTester
         {
 
             var testClient = new TestClient();
+
             var taskList = new List<Task>();
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
-                Console.WriteLine($"Product request {i}");
-                taskList.Add(testClient.GetProducts());
+                Console.WriteLine($"Policy request {i}");
+                taskList.Add(testClient.GetPolicies(i.ToString()));
             }
 
             await Task.WhenAll(taskList);
 
             Console.WriteLine("DONE");
             Console.ReadKey();
+        }
+
+        static async Task Do()
+        {
+
         }
                 
     }

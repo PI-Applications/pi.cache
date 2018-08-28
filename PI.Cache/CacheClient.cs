@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace AsyncTester
+namespace PI.Cache
 {
     public class CacheClient<TKey>
     {
@@ -34,6 +34,5 @@ namespace AsyncTester
 
             return (TType)await newSource.Task;
         }
-
     }
 }
