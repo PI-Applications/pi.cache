@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PI.Cache\PI.Cache.csproj" />
+    <ProjectReference Include="..\..\src\PI.Cache\PI.Cache.csproj" />
   </ItemGroup>
 
 </Project>
