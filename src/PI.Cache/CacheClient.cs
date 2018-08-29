@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 
 namespace PI.Cache
 {
-    public static class CacheClient
+    public class CacheClient
     {
-        private static readonly ConcurrentDictionary<string, TaskCompletionSource<object>> completionSourceCache = new ConcurrentDictionary<string, TaskCompletionSource<object>>();
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<object>> completionSourceCache 
+            = new ConcurrentDictionary<string, TaskCompletionSource<object>>();
 
-        public static async Task<TType> GetItem<TType>(string key, Func<Task<TType>> valueFactory) where TType : class
+        public async Task<TType> GetItem<TType>(string key, Func<Task<TType>> valueFactory) where TType : class
         {
             var newSource = new TaskCompletionSource<object>();
             var currentSource = completionSourceCache.GetOrAdd(key, newSource);

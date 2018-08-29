@@ -17,7 +17,7 @@ You can use either an lambda expression or method as function parameter.
 ```csharp
 public async Task<List<Product>> GetProducts()
 {
-    return await CacheClient.GetItem("PRODUCTS", () =>
+    return await _cacheClient.GetItem("PRODUCTS", () =>
     {
         var list = new List<Product>();
         for (int i = 0; i < 50; i++)
@@ -40,7 +40,7 @@ public async Task<List<Product>> GetProducts()
 ```csharp
 public async Task<List<Product>> GetProducts()
 {
-    return await CacheClient.GetItem("PRODUCTS", GetProductsBuildCache);
+    return await _cacheClient.GetItem("PRODUCTS", GetProductsBuildCache);
 }
 
 public async Task<List<Product>> GetProductsBuildCache()

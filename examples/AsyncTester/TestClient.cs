@@ -1,23 +1,24 @@
 ﻿using PI.Cache;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AsyncTester
 {
     public class TestClient
     {
+        private readonly CacheClient _cacheClient;
+
         public TestClient()
         {
-            
+            _cacheClient = new CacheClient();
         }
 
         public async Task<List<Product>> GetProducts()
         {
             Console.WriteLine("Requesting products");
 
-            return await CacheClient.GetItem("PRODUCTS", () =>
+            return await _cacheClient.GetItem("PRODUCTS", () =>
             {
                 var list = new List<Product>();
                 for (int i = 0; i < 50; i++)
@@ -35,27 +36,27 @@ namespace AsyncTester
             });
         }
 
-public async Task<List<Product>> GetProducts2()
-{
-    return await CacheClient.GetItem("PRODUCTS", GetProductsBuildCache);
-}
-
-public async Task<List<Product>> GetProductsBuildCache()
-{
-    var list = new List<Product>();
-    for (int i = 0; i < 50; i++)
-    {
-        list.Add(new Product
+        public async Task<List<Product>> GetProducts2()
         {
-            Id = i,
-            Name = $"Product {i}"
-        });
-    }
+            return await _cacheClient.GetItem("PRODUCTS", GetProductsBuildCache);
+        }
 
-    await Task.Delay(1000);
+        public async Task<List<Product>> GetProductsBuildCache()
+        {
+            var list = new List<Product>();
+            for (int i = 0; i < 50; i++)
+            {
+                list.Add(new Product
+                {
+                    Id = i,
+                    Name = $"Product {i}"
+                });
+            }
 
-    return list;
-}
+            await Task.Delay(1000);
+
+            return list;
+        }
 
         public async Task<List<Policy>> GetPolicies(string customerNo)
         {
