@@ -1,4 +1,4 @@
-﻿# PI.Cache SDK
+﻿# PI.Cache
 
 Use this package if you want to support async cache.
 

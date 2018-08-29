@@ -5,6 +5,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>PI Applications A/S</Authors>
     <Company>PI Applications A/S</Company>
+    <Description>Async cache tool</Description>
+    <PackageProjectUrl>https://github.com/PI-Applications/pi.cache</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/PI-Applications/pi.cache</RepositoryUrl>
+    <PackageTags>Cache</PackageTags>
+    <RepositoryType></RepositoryType>
+    <Copyright>Copyright (c) 2018 PI Applications A/S</Copyright>
   </PropertyGroup>
 
 </Project>
