@@ -14,30 +14,32 @@ namespace AsyncTester
             _cacheClient = new CacheClient();
         }
 
-public async Task<List<Product>> GetProducts()
-{
-    Console.WriteLine("Requesting products");
-
-    return await _cacheClient.GetItem("PRODUCTS", () =>
-    {
-        return Task.Run(async () =>
+        public async Task<List<Product>> GetProducts()
         {
-            var list = new List<Product>();
-            for (int i = 0; i < 50; i++)
+            Console.WriteLine("Requesting products");
+
+            return await _cacheClient.GetItem("PRODUCTS", () =>
             {
-                list.Add(new Product
+                throw new Exception("YOYOYOYOYOYO");
+
+                return Task.Run(async () =>
                 {
-                    Id = i,
-                    Name = $"Product {i}"
+                    var list = new List<Product>();
+                    for (int i = 0; i < 50; i++)
+                    {
+                        list.Add(new Product
+                        {
+                            Id = i,
+                            Name = $"Product {i}"
+                        });
+                    }
+
+                    await Task.Delay(1000);
+
+                    return new List<Product>(list);
                 });
-            }
-
-            await Task.Delay(1000);
-
-            return new List<Product>(list);
-        });
-    });
-}
+            });
+        }
 
         public async Task<List<Product>> GetProducts2()
         {

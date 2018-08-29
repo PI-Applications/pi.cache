@@ -9,31 +9,18 @@ namespace PI.Cache
         private readonly ConcurrentDictionary<string, TaskCompletionSource<object>> completionSourceCache 
             = new ConcurrentDictionary<string, TaskCompletionSource<object>>();
 
-        public async Task<TType> GetItem<TType>(string key, Func<Task<TType>> valueFactory) where TType : class
+        public async Task<TType> GetItem<TType>(string key, Func<Task<TType>> valueFactory) 
         {
-            var newSource = new TaskCompletionSource<object>();
-            var currentSource = completionSourceCache.GetOrAdd(key, newSource);
-
-            if (currentSource != newSource)
+            return await GetItem(key, () =>
             {
-                Console.WriteLine("Return from cache");
+                Console.WriteLine("Legacy run");
 
-                return (TType)await currentSource.Task;
-            }
-
-            try
-            {
-                Console.WriteLine("Building from cache");
-
-                var result = await valueFactory();
-                newSource.SetResult(result);
-            }
-            catch (Exception e)
-            {
-                newSource.SetException(e);
-            }
-
-            return (TType)await newSource.Task;
+                return Task.Run(async () =>
+                {
+                    var value = await valueFactory();
+                    return new CacheValue<TType>(value);
+                });
+            });
         }
 
         public async Task<TType> GetItem<TType>(string key, Func<Task<CacheValue<TType>>> valueFactory)
