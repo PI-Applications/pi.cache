@@ -1,5 +1,9 @@
 ﻿# PI.Cache
 
+![Visual Studio Team services](https://img.shields.io/vso/build/pi-applications-dk/8c43066a-ced2-41f9-822b-b5a7154a9b31/83.svg)
+[![NuGet](https://img.shields.io/nuget/v/PI.Cache.svg)](https://www.nuget.org/packages/PI.Cache/)
+[![NuGet Pre Release](https://img.shields.io/nuget/vpre/PI.Cache.svg)](https://www.nuget.org/packages/PI.Cache/)
+
 Use this package if you want to support async cache.
 
 ## Supported frameworks
