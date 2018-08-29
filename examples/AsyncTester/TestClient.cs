@@ -14,27 +14,30 @@ namespace AsyncTester
             _cacheClient = new CacheClient();
         }
 
-        public async Task<List<Product>> GetProducts()
+public async Task<List<Product>> GetProducts()
+{
+    Console.WriteLine("Requesting products");
+
+    return await _cacheClient.GetItem("PRODUCTS", () =>
+    {
+        return Task.Run(async () =>
         {
-            Console.WriteLine("Requesting products");
-
-            return await _cacheClient.GetItem("PRODUCTS", () =>
+            var list = new List<Product>();
+            for (int i = 0; i < 50; i++)
             {
-                var list = new List<Product>();
-                for (int i = 0; i < 50; i++)
+                list.Add(new Product
                 {
-                    list.Add(new Product
-                    {
-                        Id = i,
-                        Name = $"Product {i}"
-                    });
-                }
+                    Id = i,
+                    Name = $"Product {i}"
+                });
+            }
 
-                Task.Delay(1000).Wait();
+            await Task.Delay(1000);
 
-                return Task.FromResult(list);
-            });
-        }
+            return new List<Product>(list);
+        });
+    });
+}
 
         public async Task<List<Product>> GetProducts2()
         {
@@ -64,6 +67,8 @@ namespace AsyncTester
 
             var products = await GetProducts();
 
+            Console.WriteLine("Products count: " + products.Count);
+
             for (int i = 0; i < 5; i++)
             {
                 policies.Add(new Policy
@@ -74,6 +79,30 @@ namespace AsyncTester
             }
 
             return policies;
+        }
+
+        public async Task<AddressInfo> LookupAddress(string addressId)
+        {
+            return await _cacheClient.GetItem(addressId, () =>
+            {
+                return Task.Run(async () =>
+                {
+                    await Task.Delay(1000);
+
+                    var addressInfo = new AddressInfo();
+
+                    if (addressId == "1")
+                        addressInfo.HasBuildings = true;
+
+                    return new CacheValue<AddressInfo>(addressInfo, addressInfo.HasBuildings);
+                });
+            });
+        }
+
+        public class AddressInfo
+        {
+            public string AdressId { get; set; }
+            public bool HasBuildings { get; set; }
         }
 
         public class Product

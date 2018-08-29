@@ -19,19 +19,22 @@ public async Task<List<Product>> GetProducts()
 {
     return await _cacheClient.GetItem("PRODUCTS", () =>
     {
-        var list = new List<Product>();
-        for (int i = 0; i < 50; i++)
+        return Task.Run(async () =>
         {
-            list.Add(new Product
+            var list = new List<Product>();
+            for (int i = 0; i < 50; i++)
             {
-                Id = i,
-                Name = $"Product {i}"
-            });
-        }
+                list.Add(new Product
+                {
+                    Id = i,
+                    Name = $"Product {i}"
+                });
+            }
 
-        Task.Delay(1000).Wait();
+            await Task.Delay(1000);
 
-        return Task.FromResult(list);
+            return new List<Product>(list);
+        });
     });
 }
 ```
@@ -58,5 +61,30 @@ public async Task<List<Product>> GetProductsBuildCache()
     await Task.Delay(1000);
 
     return list;
+}
+```
+
+### Only cache sometimes
+If you need to store the result only some times you can return `CacheValue<TValue>`.
+
+In this example the cache result will only be stored if the address has buildings.
+
+```csharp
+public async Task<AddressInfo> LookupAddress(string addressId)
+{
+    return await _cacheClient.GetItem(addressId, () =>
+    {
+        return Task.Run(async () =>
+        {
+            await Task.Delay(1000);
+
+            var addressInfo = new AddressInfo();
+
+            if (addressId == "1")
+                addressInfo.HasBuildings = true;
+
+            return new CacheValue<AddressInfo>(addressInfo, addressInfo.HasBuildings);
+        });
+    });
 }
 ```

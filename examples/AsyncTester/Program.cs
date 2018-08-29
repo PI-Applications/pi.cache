@@ -19,6 +19,28 @@ namespace AsyncTester
 
             var testClient = new TestClient();
 
+            var addressId = "1";
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine($"Tjek address {addressId}");
+                var x = await testClient.LookupAddress(addressId);
+
+                Console.WriteLine(x.HasBuildings.ToString());
+
+                if (addressId == "1")
+                {
+                    addressId = "2";
+                }
+                else
+                {
+                    addressId = "1";
+                }
+
+                Console.WriteLine("-----------------");
+            }
+
+            Console.ReadKey();
+
             var taskList = new List<Task>();
             for (int i = 0; i < 50; i++)
             {
@@ -36,7 +58,7 @@ namespace AsyncTester
         {
 
         }
-                
+
     }
-    
+
 }
