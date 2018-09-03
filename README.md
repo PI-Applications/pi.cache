@@ -92,3 +92,7 @@ public async Task<AddressInfo> LookupAddress(string addressId)
     });
 }
 ```
+
+## Roadmap
+- Reset cache
+- Auto expire
