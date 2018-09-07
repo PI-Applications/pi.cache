@@ -48,6 +48,8 @@ namespace PI.Cache
             catch (Exception e)
             {
                 newSource.SetException(e);
+
+                completionSourceCache.TryRemove(key, out newSource);
             } 
 
             return (TType)await newSource.Task;
