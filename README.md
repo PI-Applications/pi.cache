@@ -72,6 +72,7 @@ public async Task<List<Product>> GetProductsBuildCache()
 If you need to store the result only some times you can return `CacheValue<TValue>`.
 
 In this example the cache result will only be stored if the address has buildings.
+The cache entry will auto expire after 5 days.
 
 ```csharp
 public async Task<AddressInfo> LookupAddress(string addressId)
@@ -87,7 +88,7 @@ public async Task<AddressInfo> LookupAddress(string addressId)
             if (addressId == "1")
                 addressInfo.HasBuildings = true;
 
-            return new CacheValue<AddressInfo>(addressInfo, addressInfo.HasBuildings);
+            return new CacheValue<AddressInfo>(addressInfo, addressInfo.HasBuildings, TimeSpan.FromDays(5));
         });
     });
 }
@@ -95,4 +96,3 @@ public async Task<AddressInfo> LookupAddress(string addressId)
 
 ## Roadmap
 - Reset cache
-- Auto expire

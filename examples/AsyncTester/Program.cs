@@ -20,12 +20,12 @@ namespace AsyncTester
             var testClient = new TestClient();
 
             var addressId = "1";
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Console.WriteLine($"Tjek address {addressId}");
                 var x = await testClient.LookupAddress(addressId);
 
-                Console.WriteLine(x.HasBuildings.ToString());
+                Console.WriteLine(x.Added + " --- " + x.HasBuildings.ToString());
 
                 if (addressId == "1")
                 {

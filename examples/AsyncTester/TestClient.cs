@@ -92,11 +92,12 @@ namespace AsyncTester
                     await Task.Delay(1000);
 
                     var addressInfo = new AddressInfo();
+                    addressInfo.Added = DateTimeOffset.UtcNow;
 
                     if (addressId == "1")
                         addressInfo.HasBuildings = true;
 
-                    return new CacheValue<AddressInfo>(addressInfo, addressInfo.HasBuildings);
+                    return new CacheValue<AddressInfo>(addressInfo, addressInfo.HasBuildings, TimeSpan.FromSeconds(15));
                 });
             });
         }
@@ -105,6 +106,7 @@ namespace AsyncTester
         {
             public string AdressId { get; set; }
             public bool HasBuildings { get; set; }
+            public DateTimeOffset Added { get; set; }
         }
 
         public class Product

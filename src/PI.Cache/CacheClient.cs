@@ -6,10 +6,12 @@ namespace PI.Cache
 {
     public class CacheClient
     {
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<object>> completionSourceCache 
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<object>> completionSourceCache
             = new ConcurrentDictionary<string, TaskCompletionSource<object>>();
 
-        public async Task<TType> GetItem<TType>(string key, Func<Task<TType>> valueFactory) 
+        private readonly ConcurrentDictionary<string, DateTimeOffset> expireCache = new ConcurrentDictionary<string, DateTimeOffset>();
+
+        public async Task<TType> GetItem<TType>(string key, Func<Task<TType>> valueFactory)
         {
             return await GetItem(key, () =>
             {
@@ -30,17 +32,37 @@ namespace PI.Cache
 
             if (currentSource != newSource)
             {
-                Console.WriteLine("Return from cache");
+                bool returnCache = true;
 
-                return (TType)await currentSource.Task;
+                if (expireCache.TryGetValue(key, out DateTimeOffset cacheExpireTime))
+                {
+                    if (DateTimeOffset.UtcNow > cacheExpireTime)
+                    {
+                        returnCache = false;
+                        Console.WriteLine($"Cache is expired {cacheExpireTime}");
+                    }
+                }
+
+                if (returnCache)
+                {
+                    Console.WriteLine("Return from cache");
+
+                    return (TType)await currentSource.Task;
+                }
             }
 
             try
             {
+                if (expireCache.TryRemove(key, out DateTimeOffset cacheExpireTime))
+                    Console.WriteLine($"Removed expire cache key entry: {cacheExpireTime}");
+
                 Console.WriteLine("Building from cache");
 
                 var result = await valueFactory();
                 newSource.SetResult(result.Value);
+
+                if (result.StoreCache && result.Expires.HasValue)
+                    expireCache.GetOrAdd(key, result.Expires.Value);
 
                 if (!result.StoreCache)
                     completionSourceCache.TryRemove(key, out newSource);
@@ -50,7 +72,7 @@ namespace PI.Cache
                 newSource.SetException(e);
 
                 completionSourceCache.TryRemove(key, out newSource);
-            } 
+            }
 
             return (TType)await newSource.Task;
         }
