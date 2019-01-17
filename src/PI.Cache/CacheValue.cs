@@ -4,6 +4,11 @@ namespace PI.Cache
 {
     public class CacheValue<TValue>
     {
+        public CacheValue(TValue value, bool storeCache = true) : this(value, storeCache, null)
+        {
+            
+        }
+        
         public CacheValue(TValue value) : this(value, true, null)
         {
             
